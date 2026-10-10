@@ -1,19 +1,15 @@
 import io
-import time
-from abc import ABC, abstractmethod
 import pandas as pd
-_FOREST_DF = None
-def normalize_string(value) -> str:
-    if value is None:
-        return ""
-    return str(value).strip().lower()
-def load_forest_registry():
-    global _FOREST_DF
 
-    raw_csv_data = """District,Range,Taluk,Hobli,Village,SyNo,Extent_Ha
+_FOREST_DF = None
+
+def get_dataframe():
+    global _FOREST_DF
+    if _FOREST_DF is None:
+        raw_csv_data = """District,Range,Taluk,Hobli,Village,SyNo,Extent_Ha
 Bagalkot,Bagalkot,Bagalkot,Sitimani,Mugalolli,37/1A,1.05
 Bagalkot,Bagalkot,Bagalkot,Sitimani,Chikkahodlur,46,25.90
-Bagalkot;Hungund; Hungund; Amingad,Kamatagi,101,12.50
+Bagalkot,Hungund,Hungund,Amingad,Kamatagi,101,12.50
 Bagalkot,Bagalkot,Bagalkot,Sitimani,Mugalolli,25/1A,72.87
 Bagalkot,Bagalkot,Bagalkot,Bagalkot,Mudapaljivi,3/1A,40.46
 Bagalkot,Bagalkot,Bagalkot,Sitimani,Rampur,26/32,165.12
@@ -156,12 +152,7 @@ Belagavi,Chikkodi,Chikkodi,Sankeswar,Solapur,352,35.93
 Belagavi,Chikkodi,Chikkodi,Sankeswar,Solapur,428,62.61
 Belagavi,Gokak,Gokak,Gokak,Hoolikatti,117,101.65
 """
-
-    types_dict = {col: str for col in ['District', 'Range', 'Taluk', 'Hobli', 'Village', 'SyNo']}
-    _FOREST_DF = pd.read_csv(io.StringIO(raw_csv_data), dtype=types_dict)
+        _FOREST_DF = pd.read_csv(io.StringIO(raw_csv_data), dtype=str)
+        cols = ['District', 'Taluk', 'Village', 'SyNo']
+        _FOREST_DF[cols] = _FOREST_DF[cols].apply(lambda x: x.str.strip().str.lower())
     return _FOREST_DF
-
-    def verify_parcel(self, district: str, taluk: str, village: str, syno: str) -> dict:
-        """
-        Executes highly optimized backend column matching.
-        Returns a dictionary with the lookup result. """
