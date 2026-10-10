@@ -8,7 +8,6 @@ def normalize_string(value) -> str:
         return ""
     return str(value).strip().lower()
 def load_forest_registry():
-    """Loads the 144 records into a globally indexed, pre-normalized DataFrame."""
     global _FOREST_DF
 
     raw_csv_data = """District,Range,Taluk,Hobli,Village,SyNo,Extent_Ha
